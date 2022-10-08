@@ -1,14 +1,14 @@
-const fileSystem = require('fs');
-let employees = [];
-let departments = [];
+const fileSystem = require('fs'); // including for reading files
+let employees = []; // to hold the employees in the array
+let departments = []; // to hold departments in array 
 
 module.exports.initialize = function () {
     return new Promise((resolve, reject) => {
-      fileSystem.readFile('./data/employees.json', (err, data) => {
-        if (err) {
+      fileSystem.readFile('./data/employees.json', (err, data) => { // reading file
+        if (err) {  // if file isnt found or any issue with file
           reject("Failure to read file employees.json");
         }
-        else{
+        else{ // if successfull
         employees = JSON.parse(data);
         resolve();
         }
@@ -27,7 +27,7 @@ module.exports.initialize = function () {
 
   module.exports.getAllEmployees = function () {
     return new Promise((resolve, reject) => {
-      if (employees.length == 0) {
+      if (employees.length == 0) { // to check the array of employees has some data
         reject('No data available on employees!');
       }
       resolve(employees);
@@ -38,14 +38,16 @@ module.exports.initialize = function () {
     return new Promise((resolve, reject) => {
       var managers = [];
       for (let i = 0; i < employees.length; i++) {
-        if (employees[i].isManager == true) {
-          managers.push(employees[i]);
+        if (employees[i].isManager == true) { // to check employee is a manager or not 
+          managers.push(employees[i]); // if employee is manager it is stored in managers array with push method of array objects
         }
       }
-      if (managers.length == 0) {
+      if (managers.length == 0) { // to check the array of managers has some data
         reject('No data available on managers!');
       }
-      resolve(employees);
+      else{
+      resolve(managers); // if manager has some data than reslove method will forward that managers object(array)
+      }
     });
   };
   

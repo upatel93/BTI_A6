@@ -10,6 +10,8 @@ console.log(`Express http server listening on port: ${port}`);
 };
 
 // Professor will discuss in class
+// This will use public folder as root folder for all the static objects like
+// picutres, videos etc to be displayed on app webpages.
 app.use(express.static('public'));
 
 // responding to default "/" home route
