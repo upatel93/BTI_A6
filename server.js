@@ -1,5 +1,5 @@
 const express = require("express"); //Inclusion of Express module
-const path = require("path"); // Inclusio of Path Module for sending file with correct path.
+const path = require("path"); // Inclusion of Path Module for sending file with correct path.
 const dataService = require('./data-service.js'); // Inclusion of data-service module
 const app = express(); // making app for server functioning
 
