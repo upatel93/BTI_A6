@@ -1,3 +1,16 @@
+/*************************************************************************
+* BTI325– Assignment 2
+* I declare that this assignment is my own work in accordance with Seneca Academic
+Policy. No part * of this assignment has been copied manually or electronically from any
+other source
+* (including 3rd party web sites) or distributed to other students.
+*
+* Name: ____________________________ Student ID: ______________ Date: _______
+*
+* Your app’s URL (from Cyclic) : __https://calm-pink-hippo-ring.cyclic.app/__
+*
+*************************************************************************/ 
+
 const express = require("express"); //Inclusion of Express module
 const path = require("path"); // Inclusion of Path Module for sending file with correct path.
 const dataService = require('./data-service.js'); // Inclusion of data-service module
