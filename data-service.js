@@ -1,6 +1,7 @@
 const fileSystem = require('fs'); // including for reading files
 let employees = []; // to hold the employees in the array
 let departments = []; // to hold departments in array 
+let employee = [] // to hold results temporarily
 
 module.exports.initialize = function () {
     return new Promise((resolve, reject) => {
@@ -84,5 +85,78 @@ module.exports.initialize = function () {
 
       employees.push(newEmp);
       resolve();
+    });
+  };
+
+  module.exports.getEmployeesByStatus = (status)=>{
+    return new Promise((resolve,reject)=>{
+      employee = []; // to clear employee
+      for (var i of employees){
+        if(i.status == status){
+          employee.push(i);
+        }
+      }
+
+      if(employee.length == 0){
+        reject("There are no Employees with " + status + " status");
+      }
+
+      resolve(employee);
+
+    });
+  };
+
+
+  module.exports.getEmployeesByDepartment = (department)=>{
+    return new Promise((resolve,reject)=>{
+      employee = []; // to clear employee
+      for (var i of employees){
+        if(i.department == department){
+          employee.push(i);
+        }
+      }
+
+      if(employee.length == 0){
+        reject("There are no Employees having " + department + " as their department");
+      }
+
+      resolve(employee);
+
+    });
+  };
+
+  module.exports.getEmployeesByManager = (manager)=>{
+    return new Promise((resolve,reject)=>{
+      employee = []; // to clear employee
+      for (var i of employees){
+        if(i.employeeManagerNum == manager){
+          employee.push(i);
+        }
+      }
+
+      if(employee.length == 0){
+        reject("There are no Employees having manager#" + manager + " as their manager");
+      }
+
+      resolve(employee);
+
+    });
+  };
+
+  module.exports.getEmployeeByNum = (num)=>{
+    return new Promise((resolve,reject)=>{
+      employee = []; // to clear employee
+      for (var i of employees){
+        if(i.employeeNum == num.value){
+          employee.push(i);
+        }
+      }
+
+      if(employee.length == 0){
+        reject("There is no Employee having " + num.value + " as their employee#.");
+      }
+
+      resolve(employee);
+
     });
   };

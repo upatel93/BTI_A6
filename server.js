@@ -56,6 +56,8 @@ app.get("/about",(request,response)=>{
 app.get("/departments",(request,response)=>{
     dataService.getDepartments().then(function(data){
         response.json(data);
+    }).catch((error)=>{
+      response.send(error);
     });
 });
 
@@ -63,14 +65,40 @@ app.get("/departments",(request,response)=>{
 app.get("/managers",(request,response)=>{
     dataService.getManagers().then(function(data){
         response.json(data);
+    }).catch((error)=>{
+      response.send(error);
     });
 });
 
-// responding to "/employees" route
+// responding to "/employees" route with Queries
 app.get("/employees",(request,response)=>{
+
+    if(request.query.status){
+      dataService.getEmployeesByStatus(request.query.status).then((data)=>{
+        response.json(data);
+      }).catch((error)=>{
+        response.send(error);
+      })
+    }else if(request.query.department){
+      dataService.getEmployeesByDepartment(request.query.department).then((data)=>{
+        response.json(data);
+      }).catch((error)=>{
+        response.send(error);
+      })
+    }else if(request.query.manager){
+      dataService.getEmployeesByManager(request.query.manager).then((data)=>{
+        response.json(data);
+      }).catch((error)=>{
+        response.send(error);
+      })
+    }else{
     dataService.getAllEmployees().then((data) => {
         response.json(data);
+      }).catch((error)=>{
+        response.send(error);
       });
+    }
+
 });
 
 
@@ -109,6 +137,15 @@ app.post("/employees/add",(request,response)=>{
   dataService.addEmployee(request.body).then(()=>{
     response.redirect("/employees");
   });
+})
+
+app.get("/employee/:value",(request,response)=>{
+  dataService.getEmployeeByNum(request.params).then((data)=>{
+    response.send(data);
+  }).catch((error)=>{
+    response.send(error);
+  });
+
 })
 
 
