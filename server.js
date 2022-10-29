@@ -20,6 +20,9 @@ const app = express(); // making app for server functioning
 
 let port = process.env.PORT || 8080; // Port defining 
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 function httpStart(){  // logging Port on console for debugging purpose.
 console.log(`Express http server listening on port: ${port}`);
 };
@@ -86,6 +89,7 @@ app.post("/images/add", upload.single("imageFile"), function(request, response){
   response.redirect("/images");
 });
 
+// to get the images in json object when responding to "/images" route.
 app.get("/images",(request,response)=>{
 
   fileSystem.readdir("./public/images/uploaded",(error,data)=>{
@@ -93,11 +97,19 @@ app.get("/images",(request,response)=>{
       console.log(error);
     }
     else{
-      response.json(data);
+      response.send(data);
     }
 
   });
 });
+
+
+app.post("/employees/add",(request,response)=>{
+
+  response.redirect("/employees");
+
+})
+
 
 // To catch undefined route request
 app.use(function (request, response) {

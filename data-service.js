@@ -61,4 +61,28 @@ module.exports.initialize = function () {
     });
   };
 
+  module.exports.addEmployee = (employeeData)=>{
+    return new Promise((resolve,reject)=>{
 
+      let newEmp = {
+        employeeNum:employees.length+1,
+        firstName:employeeData.firstName,
+        lastName:employeeData.lastName,
+        email:employeeData.email,
+        SSN:employeeData.SSN,
+        addressStreet:employeeData.addressStreet,
+        addressCity:employeeData.addressCity,
+        addressState:employeeData.addressState,
+        addressPostal:employeeData.addressPostal,
+        maritalStatus:employeeData.maritalStatus,
+        isManager: employeeData.isManager == undefined ? false:employeeData.isManager,
+        employeeManagerNum:employeeData.employeeManagerNum,
+        status:employeeData.status,
+        department:employeeData.department,
+        hireDate:employeeData.hireDate
+      };
+
+      employees.push(newEmp);
+      resolve();
+    });
+  };
