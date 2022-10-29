@@ -14,6 +14,7 @@ other source
 const express = require("express"); //Inclusion of Express module
 const path = require("path"); // Inclusion of Path Module for sending file with correct path.
 const multer = require("multer"); // inclusion of multer module.
+const fileSystem = require('fs'); // including for reading files
 const dataService = require('./data-service.js'); // Inclusion of data-service module
 const app = express(); // making app for server functioning
 
@@ -22,6 +23,16 @@ let port = process.env.PORT || 8080; // Port defining
 function httpStart(){  // logging Port on console for debugging purpose.
 console.log(`Express http server listening on port: ${port}`);
 };
+
+
+const storage = multer.diskStorage({
+  destination: "./public/images/uploaded",
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Professor will discuss in class
 // This will use public folder as root folder for all the static objects like
@@ -70,6 +81,23 @@ app.get("/images/add",(request,response)=>{
   response.sendFile(path.join(__dirname,"/views/addImage.html"));
 });
 
+// post route for redirecting and using middleware
+app.post("/images/add", upload.single("imageFile"), function(request, response){
+  response.redirect("/images");
+});
+
+app.get("/images",(request,response)=>{
+
+  fileSystem.readdir("./public/images/uploaded",(error,data)=>{
+    if(error){
+      console.log(error);
+    }
+    else{
+      response.json(data);
+    }
+
+  });
+});
 
 // To catch undefined route request
 app.use(function (request, response) {
