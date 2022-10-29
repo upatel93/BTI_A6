@@ -1,13 +1,13 @@
 /*************************************************************************
-* BTI325– Assignment 2
-* I declare that this assignment is my own work in accordance with Seneca Academic
-Policy. No part * of this assignment has been copied manually or electronically from any
-other source
+* BTI325– Assignment 3
+* I declare that this assignment is my own work in accordance with Seneca Academic Policy.
+No part of this assignment has been copied manually or electronically from any other source.
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: _Ujjval Patel_ Student ID: _153763214_ Date: _October 08, 2022_
+* Name: _Ujjval Patel__ Student ID: __153763214__ Date: _October 29, 2022_
 *
-* Your app’s URL (from Cyclic) : __https://calm-pink-hippo-ring.cyclic.app/__
+* Your app’s URL (from Heroku) that I can click to see your application:
+* _https://boiling-caverns-51010.herokuapp.com/_
 *
 *************************************************************************/ 
 
