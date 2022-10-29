@@ -106,9 +106,9 @@ app.get("/images",(request,response)=>{
 
 app.post("/employees/add",(request,response)=>{
 
-  
-  response.redirect("/employees");
-
+  dataService.addEmployee(request.body).then(()=>{
+    response.redirect("/employees");
+  });
 })
 
 
