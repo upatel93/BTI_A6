@@ -59,6 +59,17 @@ app.get("/employees",(request,response)=>{
 });
 
 
+// responding to "/employees/add"" route
+app.get("/employees/add",(request,response)=>{
+  response.sendFile(path.join(__dirname,"/views/addEmployee.html"));
+});
+
+// responding to "/images/add"" route
+app.get("/images/add",(request,response)=>{
+  response.sendFile(path.join(__dirname,"/views/addImage.html"));
+});
+
+
 // To catch undefined route request
 app.use(function (request, response) {
     response.status(404).sendFile(path.join(__dirname,"/views/404.html"));
