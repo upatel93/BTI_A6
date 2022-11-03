@@ -17,6 +17,7 @@ const multer = require("multer"); // inclusion of multer module.
 const fileSystem = require('fs'); // including for reading files
 const dataService = require('./data-service.js'); // Inclusion of data-service module
 const app = express(); // making app for server functioning
+const exphbs = require("express-handlebars")// Including Express-Handlebars
 
 let port = process.env.PORT || 8080; // Port defining 
 
