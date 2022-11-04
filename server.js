@@ -155,7 +155,7 @@ app.get("/images",(request,response)=>{
       console.log(error);
     }
     else{
-      response.send(data);
+      response.render("images",{imgArr:data});
     }
 
   });
