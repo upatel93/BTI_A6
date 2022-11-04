@@ -24,6 +24,28 @@ let port = process.env.PORT || 8080; // Port defining
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.engine('.hbs', exphbs.engine({ extname: '.hbs',
+helpers: {
+navLink: function(url, options){
+  return '<li' +
+  ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
+  '><a href=" ' + url + ' ">' + options.fn(this) + '</a></li>';
+ },
+
+ equal: function (lvalue, rvalue, options) {
+  if (arguments.length < 3)
+  throw new Error("Handlebars Helper equal needs 2 parameters");
+  if (lvalue != rvalue) {
+  return options.inverse(this);
+  } else {
+  return options.fn(this);
+  }
+ }
+}
+
+}));
+app.set('view engine', '.hbs');
+
 function httpStart(){  // logging Port on console for debugging purpose.
 console.log(`Express http server listening on port: ${port}`);
 };
@@ -43,14 +65,21 @@ const upload = multer({ storage: storage });
 // picutres, videos etc to be displayed on app webpages.
 app.use(express.static('public'));
 
+app.use(function(req,res,next){
+  let route = req.baseUrl + req.path;
+  app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+  next();
+ });
+
+ 
 // responding to default "/" home route
 app.get("/",(request,response)=>{
-    response.sendFile(path.join(__dirname,"/views/home.html"));
+    response.render(path.join(__dirname,"/views/home.hbs"));
 });
 
 // responding to "/about" route
 app.get("/about",(request,response)=>{
-    response.sendFile(path.join(__dirname,"/views/about.html"));
+    response.render(path.join(__dirname,"/views/about.hbs"));
 });
 
 // responding to "/departments" route
@@ -63,13 +92,13 @@ app.get("/departments",(request,response)=>{
 });
 
 // responding to "/managers" route
-app.get("/managers",(request,response)=>{
-    dataService.getManagers().then(function(data){
-        response.json(data);
-    }).catch((error)=>{
-      response.send(error);
-    });
-});
+// app.get("/managers",(request,response)=>{
+//     dataService.getManagers().then(function(data){
+//         response.json(data);
+//     }).catch((error)=>{
+//       response.send(error);
+//     });
+// });
 
 // responding to "/employees" route with Queries
 app.get("/employees",(request,response)=>{
@@ -105,12 +134,12 @@ app.get("/employees",(request,response)=>{
 
 // responding to "/employees/add"" route
 app.get("/employees/add",(request,response)=>{
-  response.sendFile(path.join(__dirname,"/views/addEmployee.html"));
+  response.render(path.join(__dirname,"/views/addEmployee.hbs"));
 });
 
 // responding to "/images/add"" route
 app.get("/images/add",(request,response)=>{
-  response.sendFile(path.join(__dirname,"/views/addImage.html"));
+  response.render(path.join(__dirname,"/views/addImage.hbs"));
 });
 
 // post route for redirecting and using middleware
@@ -152,7 +181,7 @@ app.get("/employee/:value",(request,response)=>{
 
 // To catch undefined route request
 app.use(function (request, response) {
-    response.status(404).sendFile(path.join(__dirname,"/views/404.html"));
+    response.status(404).render(path.join(__dirname,"/views/404.hbs"));
   });
 
 
