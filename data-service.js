@@ -1,4 +1,5 @@
 const fileSystem = require('fs'); // including for reading files
+const { resolve } = require('path');
 let employees = []; // to hold the employees in the array
 let departments = []; // to hold departments in array 
 let employee = [] // to hold results temporarily
@@ -87,6 +88,30 @@ module.exports.initialize = function () {
       resolve();
     });
   };
+
+  module.exports.updateEmployee = (employeeData)=>{
+    return new Promise((resolve,reject)=>{
+      for(var i of employees){
+        if(i.SSN == employeeData.SSN){// can't compare with empNum as it is not suppled in object
+        i.firstName = employeeData.firstName,
+        i.lastName = employeeData.lastName,
+        i.email = employeeData.email,
+        //i.SSN = employeeData.SSN -- dont need to as it isn't going to be updated
+        i.addressStreet = employeeData.addressStreet,
+        i.addressCity = employeeData.addressCity,
+        i.addressState = employeeData.addressState,
+        i.addressPostal = employeeData.addressPostal,
+        i.maritalStatus = employeeData.maritalStatus,
+        i.isManager =  employeeData.isManager == undefined ? false:employeeData.isManager,
+        i.employeeManagerNum = employeeData.employeeManagerNum,
+        i.status = employeeData.status,
+        i.department = employeeData.department
+        //hireDate:employeeData.hireDate -- dont need to as it isn't going to be updated
+        }
+      }
+      resolve();
+    })
+  }
 
   module.exports.getEmployeesByStatus = (status)=>{
     return new Promise((resolve,reject)=>{

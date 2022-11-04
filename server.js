@@ -85,7 +85,7 @@ app.get("/about",(request,response)=>{
 // responding to "/departments" route
 app.get("/departments",(request,response)=>{
     dataService.getDepartments().then(function(data){
-        response.json(data);
+        response.render("departments",{departments:data});
     }).catch((error)=>{
       response.send(error);
     });
@@ -169,9 +169,20 @@ app.post("/employees/add",(request,response)=>{
   });
 })
 
+app.post("/employee/update", (request, response) => {
+  dataService.updateEmployee(request.body).then(()=>{
+    console.log(request.body);
+    response.redirect("/employees");
+  }).catch(()=>{
+    response.send("Failed to Update!");
+  })
+
+});
+
 app.get("/employee/:value",(request,response)=>{
   dataService.getEmployeeByNum(request.params).then((data)=>{
-    response.send(data);
+    response.render("employee",{employee:data[0]});
+    //console.log({employee:data[0]}); for debuggig
   }).catch((error)=>{
     response.send(error);
   });
