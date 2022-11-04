@@ -123,9 +123,9 @@ app.get("/employees",(request,response)=>{
       })
     }else{
     dataService.getAllEmployees().then((data) => {
-        response.json(data);
+        response.render("employees",{employees:data});
       }).catch((error)=>{
-        response.send(error);
+        response.render({message:"No Results"});
       });
     }
 
