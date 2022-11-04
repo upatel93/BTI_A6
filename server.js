@@ -105,19 +105,19 @@ app.get("/employees",(request,response)=>{
 
     if(request.query.status){
       dataService.getEmployeesByStatus(request.query.status).then((data)=>{
-        response.json(data);
+        response.render("employees",{employees:data})
       }).catch((error)=>{
         response.send(error);
       })
     }else if(request.query.department){
       dataService.getEmployeesByDepartment(request.query.department).then((data)=>{
-        response.json(data);
+        response.render("employees",{employees:data})
       }).catch((error)=>{
         response.send(error);
       })
     }else if(request.query.manager){
       dataService.getEmployeesByManager(request.query.manager).then((data)=>{
-        response.json(data);
+        response.render("employees",{employees:data})
       }).catch((error)=>{
         response.send(error);
       })

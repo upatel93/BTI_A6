@@ -14,3 +14,21 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Montserrat-Bold";
 }
+
+a {
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.747);
+  }
+  
+  a:visited {
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: rgb(53, 184, 166);
+    text-decoration: none;
+  }
+  
+  a:active {
+    text-decoration: underline;
+  }
