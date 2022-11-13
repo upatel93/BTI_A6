@@ -171,7 +171,7 @@ app.post("/employees/add",(request,response)=>{
 
 app.post("/employee/update", (request, response) => {
   dataService.updateEmployee(request.body).then(()=>{
-    console.log(request.body);
+    //console.log(request.body);
     response.redirect("/employees");
   }).catch(()=>{
     response.send("Failed to Update!");
