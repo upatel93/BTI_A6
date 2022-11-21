@@ -92,7 +92,6 @@ module.exports.addEmployee = (employeeData)=>{
         i = null;
       }
     }
-
     Employee.create(employeeData)
     .then(()=>resolve())
     .catch(()=>reject("Error! Unable to create Employee..!!"));
@@ -120,7 +119,7 @@ module.exports.updateEmployee = (employeeData)=>{
 
 module.exports.getEmployeesByStatus = (Status)=>{
   return new Promise((resolve,reject)=>{
-    Employee.findAll({status:Status})
+    Employee.findAll({where:{status:Status}})
     .then((data)=>resolve(data))
     .catch(()=>reject("No Result returned for Employee's status"));    
   });
@@ -129,7 +128,7 @@ module.exports.getEmployeesByStatus = (Status)=>{
 
 module.exports.getEmployeesByDepartment = (Department)=>{
   return new Promise((resolve,reject)=>{
-      Employee.findAll({department:Department})
+      Employee.findAll({where:{department:Department}})
       .then((data)=>resolve(data))
       .catch(()=>reject("No Result returned for Department"));
   });
@@ -139,7 +138,7 @@ module.exports.getEmployeesByDepartment = (Department)=>{
 module.exports.getEmployeesByManager = (Manager)=>{
   return new Promise((resolve,reject)=>{
     Employee.findAll({
-      where:{employeeManagerNum:Manager.value}
+      where:{employeeManagerNum:Manager}
     })
       .then((data)=>resolve(data))
       .catch(()=>reject("No Result returned for Manager"));

@@ -166,7 +166,7 @@ app.post("/employees/add",(request,response)=>{
 
   dataService.addEmployee(request.body).then(()=>{
     response.redirect("/employees");
-  });
+  }).catch((err)=>{response.json("message")});
 })
 
 app.post("/employee/update", (request, response) => {
