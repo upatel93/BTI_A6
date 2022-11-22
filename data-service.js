@@ -192,7 +192,7 @@ module.exports.getDepartmentById = (id)=>{
   return new Promise((resolve,reject)=>{
     Department.findAll({
       where: {
-        departmentId:id.value
+        departmentId:id.departmentId
       }})
       .then((data)=> resolve(data))
       .catch(()=>reject(`Error! No Result Returned for Department + ${id.value}`));

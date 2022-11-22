@@ -17,7 +17,8 @@ const multer = require("multer"); // inclusion of multer module.
 const fileSystem = require('fs'); // including for reading files
 const dataService = require('./data-service.js'); // Inclusion of data-service module
 const app = express(); // making app for server functioning
-const exphbs = require("express-handlebars")// Including Express-Handlebars
+const exphbs = require("express-handlebars");// Including Express-Handlebars
+const { response } = require("express");
 
 let port = process.env.PORT || 8080; // Port defining 
 
@@ -201,6 +202,42 @@ app.get("/employee/:value",(request,response)=>{
 
 })
 
+//Routes for Assignment 5
+
+app.get('/departments/add',(request,response)=>{
+  response.render("addDepartment.hbs");
+})
+
+app.post('/departments/add',(request,response)=>{
+  dataService.addDepartment(request.body).then(()=>{
+  response.redirect("/departments");
+  }).catch((err)=>{response.send(err)});
+});
+
+app.post('/department/update',(request,response)=>{
+  dataService.updateDepartment(request.body)
+  .then(()=>{
+    response.redirect("/departments");
+  })
+  .catch((err)=>{
+    response.send(err);
+  });
+})
+
+app.get('/department/:departmentId',(request,response)=>{
+  dataService.getDepartmentById(request.params).then((data)=>{
+    if(data.length <= 0){
+      //console.log(data);
+      response.status(404).send("Department Not Found");
+    }
+    else{
+      console.log(data);
+      response.render("department",{department:data[0]});
+    }
+  }).catch((err)=>{
+    console.log(err);
+    response.status(404).send("Department Not Found");})
+})
 
 // To catch undefined route request
 app.use(function (request, response) {
