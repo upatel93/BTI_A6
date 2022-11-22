@@ -157,3 +157,44 @@ module.exports.getEmployeeByNum = (num)=>{
       .catch(()=>reject("No Result returned for Employee_Num"));
   });
 };
+
+//New Routes for Assignment 05
+
+module.exports.addDepartment = (departmentData)=>{
+  return new Promise((resolve,reject)=>{
+    for(let i in departmentData){
+      if(i === ""){
+        i = null;
+      }
+
+      Department.create(departmentData)
+      .then(()=>resolve())
+      .catch(()=>reject("Error! Unable to create department..!!"));
+    }
+  });
+};
+
+module.exports.updateDepartment = (departmentData)=>{
+  return new Promise((resolve,reject)=>{
+    for(let i in departmentData){
+      if(i === ""){
+        i = null;
+      }
+
+      Department.update(departmentData,{where:{departmentId:departmentData.departmentId}})
+      .then(()=>resolve())
+      .catch(()=>reject("Error! Unable to update department..!!"));
+    }
+  });
+};
+
+module.exports.getDepartmentById = (id)=>{
+  return new Promise((resolve,reject)=>{
+    Department.findAll({
+      where: {
+        departmentId:id.value
+      }})
+      .then((data)=> resolve(data))
+      .catch(()=>reject(`Error! No Result Returned for Department + ${id.value}`));
+  })
+}
