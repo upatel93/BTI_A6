@@ -85,7 +85,10 @@ app.get("/about",(request,response)=>{
 // responding to "/departments" route
 app.get("/departments",(request,response)=>{
     dataService.getDepartments().then(function(data){
+      if(data.length > 0)
         response.render("departments",{departments:data});
+      else
+      response.render("departments",{message:"No Results"});
     }).catch((error)=>{
       response.send(error);
     });
@@ -105,19 +108,28 @@ app.get("/employees",(request,response)=>{
 
     if(request.query.status){
       dataService.getEmployeesByStatus(request.query.status).then((data)=>{
-        response.render("employees",{employees:data})
+        if(data.length > 0)
+        response.render("employees",{employees:data});
+        else
+        response.render("employees",{message:"No Results"});
       }).catch((error)=>{
         response.send(error);
       })
     }else if(request.query.department){
       dataService.getEmployeesByDepartment(request.query.department).then((data)=>{
-        response.render("employees",{employees:data})
+        if(data.length > 0)
+        response.render("employees",{employees:data});
+        else
+        response.render("employees",{message:"No Results"});
       }).catch((error)=>{
         response.send(error);
       })
     }else if(request.query.manager){
       dataService.getEmployeesByManager(request.query.manager).then((data)=>{
-        response.render("employees",{employees:data})
+        if(data.length > 0)
+        response.render("employees",{employees:data});
+        else
+        response.render("employees",{message:"No Results"});
       }).catch((error)=>{
         response.send(error);
       })
@@ -139,7 +151,7 @@ app.get("/employees/add",(request,response)=>{
 
 // responding to "/images/add"" route
 app.get("/images/add",(request,response)=>{
-  response.render(path.join(__dirname,"/views/addImage.hbs"));
+  response.render("addImage.hbs");
 });
 
 // post route for redirecting and using middleware
