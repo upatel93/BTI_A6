@@ -147,13 +147,11 @@ module.exports.getEmployeesByManager = (Manager)=>{
 
 module.exports.getEmployeeByNum = (num)=>{
   return new Promise((resolve,reject)=>{
-    console.log(num);
     Employee.findAll({
     where: {
-      employeeNum:num.value
+      employeeNum:num
     }})
-      .then((data)=>{resolve(data)
-      console.log(data)})
+      .then((data)=>{resolve(data[0])})
       .catch(()=>reject("No Result returned for Employee_Num"));
   });
 };
@@ -196,5 +194,26 @@ module.exports.getDepartmentById = (id)=>{
       }})
       .then((data)=> resolve(data))
       .catch(()=>reject(`Error! No Result Returned for Department + ${id.value}`));
+  })
+}
+
+
+module.exports.deleteEmployeeByNum = (num)=>{
+  return new Promise((resolve,reject)=>{
+    Employee.destroy({
+      where: {
+        employeeNum:num
+      }})
+      .then((data)=>{
+        if(data > 0){ // Since destroy function returns number of rows it deleted. thus
+                    //it need to be menually rejected.
+        resolve("Destroyed..!")
+        }
+        else{
+        reject("Rejected..!!")
+        }
+      })
+      .catch(()=>{
+        reject("Rejected..!!")})
   })
 }

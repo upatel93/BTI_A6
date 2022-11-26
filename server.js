@@ -147,7 +147,13 @@ app.get("/employees",(request,response)=>{
 
 // responding to "/employees/add"" route
 app.get("/employees/add",(request,response)=>{
-  response.render(path.join(__dirname,"/views/addEmployee.hbs"));
+  dataService.getDepartments()
+  .then((data)=>{
+    response.render("addEmployee",{departments:data});
+  })
+  .catch(()=>{
+    res.render("addEmployee",{departments:[]});
+  })
 });
 
 // responding to "/images/add"" route
@@ -193,14 +199,51 @@ app.post("/employee/update", (request, response) => {
 });
 
 app.get("/employee/:value",(request,response)=>{
-  dataService.getEmployeeByNum(request.params).then((data)=>{
-    response.render("employee",{employee:data[0]});
-    //console.log({employee:data[0]}); for debuggig
-  }).catch((error)=>{
-    response.send(error);
+
+  // dataService.getEmployeeByNum(request.params).then((data)=>{
+  //   response.render("employee",{employee:data[0]});
+  //   //console.log({employee:data[0]}); for debuggig
+  // }).catch((error)=>{
+  //   response.send(error);
+  // });
+  let viewData = {};
+  dataService.getEmployeeByNum(request.params.value)
+  .then((data) => {
+    //console.log(data);
+    if (data) {
+      viewData.employee = data; //store employee data in the "viewData" object as "employee"
+    } else {
+      viewData.employee = null; // set employee to null if none were returned
+    }
+  })
+  .catch(() => {
+    viewData.employee = null; // set employee to null if there was an error
+  })
+  .then(dataService.getDepartments)
+  .then((data) => {
+    viewData.departments = data; // store department data in the "viewData" object as "departments"
+                                  // loop through viewData.departments and once we have found the departmentId that matches
+                                  // the employee's "department" value, add a "selected" property to the matching
+                                  // viewData.departments object
+     for (let i = 0; i < viewData.departments.length; i++) {
+      //console.log(viewData.employee.department);
+          if (viewData.departments[i].departmentId == viewData.employee.department) {
+                viewData.departments[i].selected = true;
+          }
+      }
+  })
+  .catch(() => {
+    viewData.departments = []; // set departments to empty if there was an error
+  })
+  .then(() => {
+      if (viewData.employee == null) { // if no employee - return an error
+          response.status(404).send("Employee Not Found");
+       } else {
+          response.render("employee", { viewData: viewData }); // render the "employee" view
+      }
   });
 
-})
+});
 
 //Routes for Assignment 5
 
@@ -237,6 +280,16 @@ app.get('/department/:departmentId',(request,response)=>{
   }).catch((err)=>{
     console.log(err);
     response.status(404).send("Department Not Found");})
+})
+
+app.get("/employees/delete/:value",(request,response)=>{
+  dataService.deleteEmployeeByNum(request.params.value)
+  .then(()=>{
+    response.redirect("/employees");
+  })
+  .catch(()=>{
+    response.status(500).send(`Unable to Remove Employee with EmpNum: ${request.params.value}`);
+  })
 })
 
 // To catch undefined route request
