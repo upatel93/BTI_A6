@@ -203,7 +203,7 @@ module.exports.deleteEmployeeByNum = (num)=>{
     Employee.destroy({
       where: {
         employeeNum:num
-      }})
+      },force:true})
       .then((data)=>{
         if(data > 0){ // Since destroy function returns number of rows it deleted. thus
                     //it need to be menually rejected.
