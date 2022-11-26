@@ -1,10 +1,10 @@
 /*************************************************************************
-* BTI325– Assignment 4
+* BTI325– Assignment 5
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy.
 No part of this assignment has been copied manually or electronically from any other source.
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: _Ujjval Patel__ Student ID: __153763214__ Date: _November 13, 2022_
+* Name: _Ujjval Patel__ Student ID: __153763214__ Date: _November 26, 2022_
 *
 * Your app’s URL (from Heroku) that I can click to see your application:
 * https://boiling-caverns-51010.herokuapp.com/
@@ -152,7 +152,7 @@ app.get("/employees/add",(request,response)=>{
     response.render("addEmployee",{departments:data});
   })
   .catch(()=>{
-    res.render("addEmployee",{departments:[]});
+    response.render("addEmployee",{departments:[]});
   })
 });
 
@@ -185,7 +185,7 @@ app.post("/employees/add",(request,response)=>{
 
   dataService.addEmployee(request.body).then(()=>{
     response.redirect("/employees");
-  }).catch((err)=>{response.json("message")});
+  }).catch((err)=>{response.json("message:"+err)});
 })
 
 app.post("/employee/update", (request, response) => {
