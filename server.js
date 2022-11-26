@@ -6,8 +6,8 @@ No part of this assignment has been copied manually or electronically from any o
 *
 * Name: _Ujjval Patel__ Student ID: __153763214__ Date: _November 26, 2022_
 *
-* Your app’s URL (from Heroku) that I can click to see your application:
-* https://boiling-caverns-51010.herokuapp.com/
+* Your app’s URL (from cyclic) that I can click to see your application:
+* https://nutty-dress-seal.cyclic.app/
 *
 *************************************************************************/ 
 
