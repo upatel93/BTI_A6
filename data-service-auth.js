@@ -18,6 +18,16 @@ let User; // to be defined on new connection
 
 //let db = mongoose.createConnection(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
+//String Validator
+let isValid = (string)=>{
+    let valid = true;
+    if(string){
+       if(string.trim().length !== 0)
+       return valid;
+    }
+    return !valid;
+}
+
 module.exports.initialize = () =>{
     return new Promise((resolve,reject)=>{
         let db = mongoose.createConnection(url, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -40,9 +50,15 @@ module.exports.initialize = () =>{
 
 module.exports.registerUser = (userData)=>{
     return new Promise((resolve,reject)=>{
-        if(trim(userData.password).length == 0 || trim(userData.password2).length == 0){
-            reject("Error: user name cannot be empty or only white spaces! ");
+        if(isValid(userData.userName)){
+            reject("Error: User name cannot be empty or only white spaces! ");
         }
+
+        if(isValid(userData.password)){
+            reject("Error: Password cannot be empty or only white spaces! ");
+        }
+
+        userData.userName = userData.userName.trim();
 
         if(userData.password != userData.password2){
             reject("Error: Passwords do not match");
