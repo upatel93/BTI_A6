@@ -50,18 +50,23 @@ module.exports.initialize = () =>{
 
 module.exports.registerUser = (userData)=>{
     return new Promise((resolve,reject)=>{
-        if(isValid(userData.userName)){
+        console.log(userData);
+        console.log(userData.userName);
+        if(!isValid(userData.userName)){
             reject("Error: User name cannot be empty or only white spaces! ");
+            return;
         }
 
-        if(isValid(userData.password)){
+        if(!isValid(userData.password)){
             reject("Error: Password cannot be empty or only white spaces! ");
+            return;
         }
 
         userData.userName = userData.userName.trim();
 
         if(userData.password != userData.password2){
             reject("Error: Passwords do not match");
+            return;
         }
 
         let newUser = User(userData);
