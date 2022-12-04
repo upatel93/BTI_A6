@@ -323,7 +323,19 @@ app.get("/login",(request,response)=>{
 });
 
 app.post("/login",(request,response)=>{
-  response.render("login")
+  //response.render("login")
+  request.body.userAgent = request.get('User-Agent');
+  dataServiceAuth.checkUser(request.body)
+  .then((user)=>{
+    request.session.user = {
+      userName:user.userName,
+      email:user.email,
+      loginHistory:user.loginHistory
+    }
+    response.redirect("/employees");
+  })
+  .catch((error)=>response.render("login",{errorMessage: error, userName: request.body.userName}))
+
 });
 
 app.get("/register",(request,response)=>{
@@ -331,8 +343,19 @@ app.get("/register",(request,response)=>{
 });
 
 app.post("/register",(request,response)=>{
-  response.render("login")
+  dataServiceAuth.registerUser(request.body)
+  .then(()=>response.render("register",{successMessage: "User created"}))
+  .catch((error)=>response.render("register",{errorMessage: error, userName: request.body.userName}))
 });
+
+app.get("/logout",(request,response)=>{
+  request.session.reset();
+  response.redirect("/");
+})
+
+app.get("/userHistory",ensureLogin,(request,response)=>{
+  response.render("userHistory");
+})
 
 // To catch undefined route request
 app.use(function (request, response) {
