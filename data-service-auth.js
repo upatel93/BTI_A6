@@ -31,6 +31,7 @@ module.exports.initialize = () =>{
         //If connection is established
         db.once('open',()=>{
             User = db.model("users",userSchema); // Registering userSchema to users
+            console.log(`Success MongoDB connected`);
             resolve();
         });
 
@@ -67,9 +68,30 @@ module.exports.checkUser = (userData) => {
         User.findOne({ userName : userData.userName }).exec()
         .then((user)=>{
             if(user){
+                console.log(user);
+                if(user.password != userData.password){
+                    reject(`Incorrect password for user: ${userData.userName}`)
+                }else{
+                    user.loginHistory.push({dateTime: (new Date()).toString(), userAgent: userData.userAgent})
 
+                    User.update({
+                        userName : user.userName
+                    },{
+                         $set: {loginHistory: user.loginHistory}
+                    },{
+                        multi: false
+                    })
+                    .exec()
+                    .then(()=>resolve(user))
+                    .catch((error)=> reject(`There was an error verifying the user : ${error}`))
+                }
+
+            }else{
+                reject(`Unable to find user: ${userData.userName}`)
             }
         })
-        .catch()
+        .catch((error)=>{
+            reject(`There was error in finding user: ${error}`)
+        })
     });
 };

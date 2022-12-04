@@ -1,5 +1,5 @@
 /*************************************************************************
-* BTI325– Assignment 5
+* BTI325– Assignment 6
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy.
 No part of this assignment has been copied manually or electronically from any other source.
 * (including 3rd party web sites) or distributed to other students.
@@ -17,9 +17,11 @@ const multer = require("multer"); // inclusion of multer module.
 const fileSystem = require('fs'); // including for reading files
 const dataService = require('./data-service.js'); // Inclusion of data-service module
 const dataServiceAuth = require('./data-service-auth') // inclusion of data_service_auth_module
+const clientSessions = require('client-sessions') // inclusion of Cliant_Sessions Module
 const app = express(); // making app for server functioning
 const exphbs = require("express-handlebars");// Including Express-Handlebars
 const { response } = require("express");
+const { request } = require("http");
 
 let port = process.env.PORT || 8080; // Port defining 
 
@@ -67,6 +69,27 @@ const upload = multer({ storage: storage });
 // picutres, videos etc to be displayed on app webpages.
 app.use(express.static('public'));
 
+app.use(clientSessions({
+  cookieName: "session", // this is the object name that will be added to 'req'
+  secret: "Assignment_06_The_World_Is_Just_Awesome", // this should be a long un-guessable string.
+  duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+  activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
+}));
+
+app.use((request, response, next)=>{
+  response.locals.session = request.session;
+  next();
+});
+
+let  ensureLogin = (request, response, next)=>{
+  if (!request.session.user) {
+    response.redirect("/login");
+  } else {
+    next();
+  }
+}
+
+
 app.use(function(req,res,next){
   let route = req.baseUrl + req.path;
   app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
@@ -75,17 +98,17 @@ app.use(function(req,res,next){
 
  
 // responding to default "/" home route
-app.get("/",(request,response)=>{
+app.get("/",ensureLogin,(request,response)=>{
     response.render(path.join(__dirname,"/views/home.hbs"));
 });
 
 // responding to "/about" route
-app.get("/about",(request,response)=>{
+app.get("/about",ensureLogin,(request,response)=>{
     response.render(path.join(__dirname,"/views/about.hbs"));
 });
 
 // responding to "/departments" route
-app.get("/departments",(request,response)=>{
+app.get("/departments",ensureLogin,(request,response)=>{
     dataService.getDepartments().then(function(data){
       if(data.length > 0)
         response.render("departments",{departments:data});
@@ -106,7 +129,7 @@ app.get("/departments",(request,response)=>{
 // });
 
 // responding to "/employees" route with Queries
-app.get("/employees",(request,response)=>{
+app.get("/employees",ensureLogin,(request,response)=>{
 
     if(request.query.status){
       dataService.getEmployeesByStatus(request.query.status).then((data)=>{
@@ -147,7 +170,7 @@ app.get("/employees",(request,response)=>{
 
 
 // responding to "/employees/add"" route
-app.get("/employees/add",(request,response)=>{
+app.get("/employees/add",ensureLogin,(request,response)=>{
   dataService.getDepartments()
   .then((data)=>{
     response.render("addEmployee",{departments:data});
@@ -158,17 +181,17 @@ app.get("/employees/add",(request,response)=>{
 });
 
 // responding to "/images/add"" route
-app.get("/images/add",(request,response)=>{
+app.get("/images/add",ensureLogin,(request,response)=>{
   response.render("addImage.hbs");
 });
 
 // post route for redirecting and using middleware
-app.post("/images/add", upload.single("imageFile"), function(request, response){
+app.post("/images/add",ensureLogin, upload.single("imageFile"), function(request, response){
   response.redirect("/images");
 });
 
 // to get the images in json object when responding to "/images" route.
-app.get("/images",(request,response)=>{
+app.get("/images",ensureLogin,(request,response)=>{
 
   fileSystem.readdir("./public/images/uploaded",(error,data)=>{
     if(error){
@@ -182,14 +205,14 @@ app.get("/images",(request,response)=>{
 });
 
 
-app.post("/employees/add",(request,response)=>{
+app.post("/employees/add",ensureLogin,(request,response)=>{
 
   dataService.addEmployee(request.body).then(()=>{
     response.redirect("/employees");
   }).catch((err)=>{response.json("message:"+err)});
 })
 
-app.post("/employee/update", (request, response) => {
+app.post("/employee/update",ensureLogin, (request, response) => {
   dataService.updateEmployee(request.body).then(()=>{
     //console.log(request.body);
     response.redirect("/employees");
@@ -199,7 +222,7 @@ app.post("/employee/update", (request, response) => {
 
 });
 
-app.get("/employee/:value",(request,response)=>{
+app.get("/employee/:value",ensureLogin,(request,response)=>{
 
   // dataService.getEmployeeByNum(request.params).then((data)=>{
   //   response.render("employee",{employee:data[0]});
@@ -248,17 +271,17 @@ app.get("/employee/:value",(request,response)=>{
 
 //Routes for Assignment 5
 
-app.get('/departments/add',(request,response)=>{
+app.get('/departments/add',ensureLogin,(request,response)=>{
   response.render("addDepartment.hbs");
 })
 
-app.post('/departments/add',(request,response)=>{
+app.post('/departments/add',ensureLogin,(request,response)=>{
   dataService.addDepartment(request.body).then(()=>{
   response.redirect("/departments");
   }).catch((err)=>{response.send(err)});
 });
 
-app.post('/department/update',(request,response)=>{
+app.post('/department/update',ensureLogin,(request,response)=>{
   dataService.updateDepartment(request.body)
   .then(()=>{
     response.redirect("/departments");
@@ -268,7 +291,7 @@ app.post('/department/update',(request,response)=>{
   });
 })
 
-app.get('/department/:departmentId',(request,response)=>{
+app.get('/department/:departmentId',ensureLogin,(request,response)=>{
   dataService.getDepartmentById(request.params).then((data)=>{
     if(data.length <= 0){
       //console.log(data);
@@ -283,7 +306,7 @@ app.get('/department/:departmentId',(request,response)=>{
     response.status(404).send("Department Not Found");})
 })
 
-app.get("/employees/delete/:value",(request,response)=>{
+app.get("/employees/delete/:value",ensureLogin,(request,response)=>{
   dataService.deleteEmployeeByNum(request.params.value)
   .then(()=>{
     response.redirect("/employees");
@@ -292,6 +315,24 @@ app.get("/employees/delete/:value",(request,response)=>{
     response.status(500).send(`Unable to Remove Employee with EmpNum: ${request.params.value}`);
   })
 })
+
+//---Adding New Routes for Assignment 6---//
+
+app.get("/login",(request,response)=>{
+  response.render("login")
+});
+
+app.post("/login",(request,response)=>{
+  response.render("login")
+});
+
+app.get("/register",(request,response)=>{
+  response.render("register")
+});
+
+app.post("/register",(request,response)=>{
+  response.render("login")
+});
 
 // To catch undefined route request
 app.use(function (request, response) {
@@ -302,6 +343,7 @@ app.use(function (request, response) {
 // initializing the data and starting server
 dataService
   .initialize()
+  .then(dataServiceAuth.initialize)
   .then(function () {
     app.listen(port, httpStart);
   })
