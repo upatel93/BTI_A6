@@ -50,22 +50,22 @@ module.exports.initialize = () =>{
 
 module.exports.registerUser = (userData)=>{
     return new Promise((resolve,reject)=>{
-        console.log(userData);
-        console.log(userData.userName);
+        //console.log(userData);
+        //console.log(userData.userName);
         if(!isValid(userData.userName)){
-            reject("Error: User name cannot be empty or only white spaces! ");
+            reject("User name cannot be empty or only white spaces! ");
             return;
         }
 
         if(!isValid(userData.password)){
-            reject("Error: Password cannot be empty or only white spaces! ");
+            reject("Password cannot be empty or only white spaces! ");
             return;
         }
 
         userData.userName = userData.userName.trim();
 
         if(userData.password != userData.password2){
-            reject("Error: Passwords do not match");
+            reject("Passwords do not match");
             return;
         }
 
@@ -76,14 +76,17 @@ module.exports.registerUser = (userData)=>{
         .catch((error)=>{
             if(error.code == 11000){
                 reject("User Name already taken");
+                return;
             }else{
                 reject(`There was an error while creating user : ${error}`);
+                return;
             }
         })
 
     });
 };
-// need to work on this..
+
+
 module.exports.checkUser = (userData) => {
     return new Promise((resolve,reject)=>{
         User.findOne({ userName : userData.userName }).exec()
@@ -92,6 +95,7 @@ module.exports.checkUser = (userData) => {
                 console.log(user);
                 if(user.password != userData.password){
                     reject(`Incorrect password for user: ${userData.userName}`)
+                    return;
                 }else{
                     user.loginHistory.push({dateTime: (new Date()).toString(), userAgent: userData.userAgent})
 
@@ -109,10 +113,12 @@ module.exports.checkUser = (userData) => {
 
             }else{
                 reject(`Unable to find user: ${userData.userName}`)
+                return;
             }
         })
         .catch((error)=>{
             reject(`There was error in finding user: ${error}`)
+            return;
         })
     });
 };
