@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'); // including moongoose
+const bcrypt = require('bcryptjs'); // Inclusion of bscrypter as per instruction
 let Schema = mongoose.Schema;
 let userSchema = new Schema({
     "userName": {
