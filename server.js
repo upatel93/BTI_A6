@@ -22,6 +22,7 @@ const app = express(); // making app for server functioning
 const exphbs = require("express-handlebars");// Including Express-Handlebars
 const { response } = require("express");
 const { request } = require("http");
+const { Session } = require("inspector");
 
 let port = process.env.PORT || 8080; // Port defining 
 
@@ -354,7 +355,8 @@ app.get("/logout",(request,response)=>{
 })
 
 app.get("/userHistory",ensureLogin,(request,response)=>{
-  response.render("userHistory");
+  //console.log(request.session.user);
+  response.render("userHistory",{history:request.session.user});
 })
 
 // To catch undefined route request
