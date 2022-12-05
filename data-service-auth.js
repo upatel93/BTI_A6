@@ -71,11 +71,10 @@ module.exports.registerUser = (userData)=>{
             return;
         }
 
-        bcrypt.hash(userData.password, 10).then(hash=>{ 
+        bcrypt.hash(userData.password, 10).then((hash)=>{ 
             userData.password = hash;
             let newUser = User(userData);
             console.log(newUser);
-            resolve();
             newUser.save()
             .then(()=>resolve())
             .catch((error)=>{
