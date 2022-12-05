@@ -14,7 +14,7 @@ let userSchema = new Schema({
     }]
 });
 let pwd = "VkBU1ZayKCGMGF9R";
-let url = `mongodb+srv://upatel69:${pwd}@senecaweb.uclzryc.mongodb.net/?retryWrites=true&w=majority`
+let url = `mongodb+srv://upatel69:${pwd}@senecaweb.uclzryc.mongodb.net/assignment?retryWrites=true&w=majority`
 let User; // to be defined on new connection
 
 //let db = mongoose.createConnection(url, {useNewUrlParser: true, useUnifiedTopology: true})
